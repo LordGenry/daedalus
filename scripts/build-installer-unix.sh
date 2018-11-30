@@ -99,7 +99,7 @@ export daedalus_version="${1:-dev}"
 mkdir -p ~/.local/bin
 
 if test -e "dist" -o -e "release" -o -e "node_modules"
-then sudo rm -rf dist release node_modules || true
+then rm -rf dist release node_modules || true
 fi
 
 export PATH=$HOME/.local/bin:$PATH
@@ -118,9 +118,9 @@ DAEDALUS_BRIDGE=$(nix-build --no-out-link -A daedalus-bridge)
 
 pushd installers
     echo '~~~ Prebuilding dependencies for cardano-installer, quietly..'
-    $nix_shell default.nix --run true || echo "Prebuild failed!"
+    $nix_shell ../default.nix -A daedalus-installer --run true || echo "Prebuild failed!"
     echo '~~~ Building the cardano installer generator..'
-    INSTALLER=$(nix-build -j 2 --no-out-link)
+    INSTALLER=$(nix-build -j 2 --no-out-link ../ -A daedalus-installer)
 
     for cluster in ${CLUSTERS}
     do
@@ -134,7 +134,7 @@ pushd installers
           INSTALLER_CMD+="  --build-job        ${build_id}"
           INSTALLER_CMD+="  --cluster          ${cluster}"
           INSTALLER_CMD+="  --out-dir          ${APP_NAME}"
-          $nix_shell ../shell.nix --run "${INSTALLER_CMD}"
+          nix-shell -p bash --run "${INSTALLER_CMD}"
 
           if [ -d ${APP_NAME} ]; then
                   if [ -n "${BUILDKITE_JOB_ID:-}" ]
