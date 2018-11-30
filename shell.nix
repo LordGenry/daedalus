@@ -3,7 +3,7 @@ let
 in
 { system ? builtins.currentSystem
 , config ? {}
-, pkgs ? (import (localLib.fetchNixPkgs) { inherit system config; })
+, pkgs ? localLib.iohkNix.getPkgs { inherit system config; }
 , cluster ? "demo"
 , systemStart ? null
 , autoStartBackend ? systemStart != null
@@ -78,6 +78,7 @@ let
     ] ++ (localLib.optionals autoStartBackend [
       daedalusPkgs.daedalus-bridge
     ]));
+    buildCommand = "touch $out";
     LAUNCHER_CONFIG = launcherConfig';
     DAEDALUS_CONFIG = if (cluster == "demo") then demoConfig else "${daedalusPkgs.daedalus.cfg}/etc/";
     DAEDALUS_INSTALL_DIRECTORY = "./";

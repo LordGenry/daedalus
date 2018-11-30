@@ -6,6 +6,10 @@ let
     inherit system buildNum cluster;
     version = "${version}${suffix}";
   };
+  shellEnvs = {
+    linux = import ./shell.nix { system = "x86_64-linux"; };
+    darwin = import ./shell.nix { system = "x86_64-darwin"; };
+  };
   suffix = if buildNum == null then "" else "-${toString buildNum}";
   version = (builtins.fromJSON (builtins.readFile (./. + "/package.json"))).version;
 
@@ -26,5 +30,6 @@ let
   lib = (import ./. {}).pkgs.lib;
   clusters = lib.splitString " " (builtins.replaceStrings ["\n"] [""] (builtins.readFile ./installer-clusters.cfg));
 in {
+  inherit shellEnvs;
   tests = (daedalusPkgs {}).tests;
 } // builtins.listToAttrs (map (x: { name = x; value = makeJobs x; }) clusters)
