@@ -7,8 +7,8 @@ let
     version = "${version}${suffix}";
   };
   shellEnvs = {
-    linux = import ./shell.nix { system = "x86_64-linux"; };
-    darwin = import ./shell.nix { system = "x86_64-darwin"; };
+    linux = import ./shell.nix { system = "x86_64-linux"; autoStartBackend = true; };
+    darwin = import ./shell.nix { system = "x86_64-darwin"; autoStartBackend = true; };
   };
   suffix = if buildNum == null then "" else "-${toString buildNum}";
   version = (builtins.fromJSON (builtins.readFile (./. + "/package.json"))).version;
