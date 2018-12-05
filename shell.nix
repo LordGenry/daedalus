@@ -13,8 +13,8 @@ in
 }:
 
 let
-  yaml2json = pkgs.haskell.lib.disableCabalFlag pkgs.haskellPackages.yaml "no-exe";
   daedalusPkgs = import ./. { inherit cluster; };
+  inherit (daedalusPkgs) yaml2json;
   yarn = pkgs.yarn.override { inherit nodejs; };
   nodejs = pkgs.nodejs-8_x;
   launcher-json = pkgs.runCommand "read-launcher-config.json" { buildInputs = [ yaml2json ]; } "yaml2json ${daedalusPkgs.daedalus.cfg}/etc/launcher-config.yaml > $out";

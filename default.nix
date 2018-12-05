@@ -48,6 +48,8 @@ let
     };
     source = builtins.filterSource cleanSourceFilter ./.;
 
+    yaml2json = pkgs.haskell.lib.disableCabalFlag pkgs.haskellPackages.yaml "no-exe";
+
     tests = {
       runFlow = self.callPackage ./tests/flow.nix {};
       runLint = self.callPackage ./tests/lint.nix {};
