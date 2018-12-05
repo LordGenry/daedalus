@@ -129,12 +129,13 @@ pushd installers
           APP_NAME="csl-daedalus"
           rm -rf "${APP_NAME}"
 
-          INSTALLER_CMD="$INSTALLER/bin/make-installer ${test_installer}"
-          INSTALLER_CMD+="  --cardano          ${DAEDALUS_BRIDGE}"
-          INSTALLER_CMD+="  --build-job        ${build_id}"
-          INSTALLER_CMD+="  --cluster          ${cluster}"
-          INSTALLER_CMD+="  --out-dir          ${APP_NAME}"
-          nix-shell -p bash --run "${INSTALLER_CMD}"
+          INSTALLER_CMD=("$INSTALLER/bin/make-installer"
+                         "${test_installer}"
+                         "  --cardano          ${DAEDALUS_BRIDGE}"
+                         "  --build-job        ${build_id}"
+                         "  --cluster          ${cluster}"
+                         "  --out-dir          ${APP_NAME}")
+          ${INSTALLER_CMD[@]}
 
           if [ -d ${APP_NAME} ]; then
                   if [ -n "${BUILDKITE_JOB_ID:-}" ]
