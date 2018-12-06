@@ -38,7 +38,7 @@ let
     ## TODO: move to installers/nix
     daedalus-installer = import ./installers/default.nix {
       inherit (cardanoSL) daedalus-bridge;
-      inherit localLib;
+      inherit localLib system;
     };
     daedalus = self.callPackage ./installers/nix/linux.nix {};
     rawapp = self.callPackage ./yarn2nix.nix {

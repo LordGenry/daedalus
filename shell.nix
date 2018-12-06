@@ -13,7 +13,7 @@ in
 }:
 
 let
-  daedalusPkgs = import ./. { inherit cluster; };
+  daedalusPkgs = import ./. { inherit cluster system; };
   inherit (daedalusPkgs) yaml2json;
   yarn = pkgs.yarn.override { inherit nodejs; };
   nodejs = pkgs.nodejs-8_x;

@@ -1,6 +1,6 @@
 { system ? builtins.currentSystem
 , config ? {}
-, pkgs ? localLib.pkgs
+, pkgs ? localLib.iohkNix.getPkgs { inherit system config; }
 
 # Disable running of tests for all local packages.
 , forceDontCheck ? false
