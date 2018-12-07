@@ -135,7 +135,7 @@ pushd installers
                          "  --build-job        ${build_id}"
                          "  --cluster          ${cluster}"
                          "  --out-dir          ${APP_NAME}")
-          "${INSTALLER_CMD[@]}"
+          $nix_shell ../shell.nix -A buildShell --run "${INSTALLER_CMD[@]}"
 
           if [ -d ${APP_NAME} ]; then
                   if [ -n "${BUILDKITE_JOB_ID:-}" ]

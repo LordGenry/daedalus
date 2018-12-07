@@ -67,6 +67,18 @@ let
     rm $out/wallet-topology.yaml
     cp ${demoTopologyYaml} $out/wallet-topology.yaml
   '';
+  buildShell = pkgs.stdenv.mkDerivation {
+    name = "daedalus-build";
+    buildInputs = [ nodejs yarn ] ++ (with pkgs; [
+      nix bash binutils coreutils curl gnutar
+      git python27 curl electron
+      nodePackages.node-gyp nodePackages.node-pre-gyp
+      gnumake
+      chromedriver
+    ] ++ (localLib.optionals autoStartBackend [
+      daedalusPkgs.daedalus-bridge
+    ]));
+  };
   daedalusShell = pkgs.stdenv.mkDerivation (rec {
     name = "daedalus";
     buildInputs = [ nodejs yarn ] ++ (with pkgs; [
@@ -164,4 +176,4 @@ let
       exit 0
     '';
   });
-in daedalusShell // { inherit fixYarnLock; }
+in daedalusShell // { inherit fixYarnLock buildShell; }
